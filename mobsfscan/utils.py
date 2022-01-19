@@ -48,10 +48,7 @@ def validate_config(extras, options):
     """Validate user supplied config file."""
     if not extras:
         return False
-    if isinstance(extras, dict):
-        root = extras
-    else:
-        root = extras[0]
+    root = extras if isinstance(extras, dict) else extras[0]
     valid = True
     for key, value in root.items():
         if key.replace('-', '_') not in options.keys():

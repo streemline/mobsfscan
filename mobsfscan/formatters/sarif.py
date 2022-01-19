@@ -54,16 +54,13 @@ def to_uri(file_path):
     pure_path = PurePath(file_path)
     if pure_path.is_absolute():
         return pure_path.as_uri()
-    else:
-        posix_path = pure_path.as_posix()  # Replace backslashes with slashes.
-        return urlparse.quote(posix_path)  # %-encode special characters.
+    posix_path = pure_path.as_posix()  # Replace backslashes with slashes.
+    return urlparse.quote(posix_path)  # %-encode special characters.
 
 
 def get_rule_name(rule_id):
-    normalized = []
     noms = rule_id.split('_')
-    for nom in noms:
-        normalized.append(nom.capitalize())
+    normalized = [nom.capitalize() for nom in noms]
     return ''.join(normalized)
 
 
@@ -79,7 +76,7 @@ def add_results(path, scan_results, run):
         result = create_result(path, rule_id, issue_dict, rules, rule_indices)
         run.results.append(result)
 
-    if len(rules) > 0:
+    if rules:
         run.tool.driver.rules = list(rules.values())
 
 

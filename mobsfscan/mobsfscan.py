@@ -42,19 +42,13 @@ class MobSFScan:
     def rules_selector(self, suffix):
         """Get rule extensions from suffix."""
         if suffix in ['.java', '.kt']:
-            if suffix == '.java':
-                self.best_practices = '.java'
-            else:
-                self.best_practices = '.kt'
+            self.best_practices = '.java' if suffix == '.java' else '.kt'
             self.options['match_rules'] = settings.ANDROID_RULES_DIR.as_posix()
             self.options['sgrep_rules'] = settings.SGREP_RULES_DIR.as_posix()
             self.options['sgrep_extensions'] = {'.java'}
             self.options['match_extensions'] = {'.kt'}
         elif suffix in {'.swift', '.m'}:
-            if suffix == '.swift':
-                self.best_practices = '.swift'
-            else:
-                self.best_practices = '.m'
+            self.best_practices = '.swift' if suffix == '.swift' else '.m'
             self.options['match_rules'] = settings.IOS_RULES_DIR.as_posix()
             self.options['match_extensions'] = {'.m', '.swift'}
 
@@ -68,9 +62,9 @@ class MobSFScan:
                     if pfile.suffix not in scan_suffix:
                         continue
                     return self.rules_selector(pfile.suffix)
+            elif pobj.suffix not in scan_suffix:
+                continue
             else:
-                if pobj.suffix not in scan_suffix:
-                    continue
                 return self.rules_selector(pobj.suffix)
 
     def scan(self) -> dict:
@@ -186,9 +180,12 @@ class MobSFScan:
             tmp_files = files.copy()
             for file in files:
                 mstr = file.get('match_string')
-                if 'mobsf-ignore:' in mstr and rule_id in mstr:
-                    tmp_files.remove(file)
-                elif self.suppress_pm_comments(file, rule_id):
+                if (
+                    'mobsf-ignore:' in mstr
+                    and rule_id in mstr
+                    or ('mobsf-ignore:' not in mstr or rule_id not in mstr)
+                    and self.suppress_pm_comments(file, rule_id)
+                ):
                     tmp_files.remove(file)
                 if len(tmp_files) == 0:
                     del_keys.add(rule_id)
