@@ -15,11 +15,10 @@ def get_paths():
     kotlin = base_dir / 'kotlin'
     swift = base_dir / 'swift'
     objc = base_dir / 'objc'
-    paths = {
+    return {
         'dot_file': dot_file,
         'java': java,
         'kotlin': kotlin,
         'swift': swift,
         'objc': objc,
     }
-    return paths

@@ -45,5 +45,4 @@ def init_logger(module_name) -> logging.Logger:
                         format=log_format,
                         level=logging.INFO)
     logger_obj = logging.getLogger(module_name)
-    logger = ColorLogsWrapper(logger_obj)
-    return logger
+    return ColorLogsWrapper(logger_obj)

@@ -12,9 +12,7 @@ UNSAFE_HTML = 'unsafehtml'
 
 def _escape(data, fmt):
     """Escape HTML unsafe data."""
-    if fmt == UNSAFE_HTML:
-        return escape(data)
-    return data
+    return escape(data) if fmt == UNSAFE_HTML else data
 
 
 def print_tool_info(ver):
@@ -26,8 +24,7 @@ def print_tool_info(ver):
 
 def format_table(rule_id, details, fmt):
     """Get CLI friendly format."""
-    items = []
-    items.append(['RULE ID', rule_id])
+    items = [['RULE ID', rule_id]]
     for meta, value in details['metadata'].items():
         if meta == 'id':
             continue
